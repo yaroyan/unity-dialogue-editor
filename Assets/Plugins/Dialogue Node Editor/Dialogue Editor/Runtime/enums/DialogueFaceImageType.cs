@@ -5,7 +5,7 @@ namespace Dialogue
     /// </summary>
     public enum DialogueFaceImageType
     {
-        Right,
-        Left,
+        Right = 1,
+        Left = 2,
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Dialogue
 {
+    [System.Serializable]
     public class StartData : BaseData
     {
 

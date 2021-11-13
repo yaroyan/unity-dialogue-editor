@@ -4,8 +4,9 @@ using UnityEngine;
 
 namespace Dialogue
 {
+    [System.Serializable]
     public class EndData : BaseData
     {
-
+        public ContainerEnumType<EndNodeType> EnumType = new ContainerEnumType<EndNodeType>();
     }
 }

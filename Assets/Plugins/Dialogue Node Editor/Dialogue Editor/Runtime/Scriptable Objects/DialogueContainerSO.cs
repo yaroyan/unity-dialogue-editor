@@ -13,24 +13,35 @@ namespace Dialogue
     [System.Serializable]
     public class DialogueContainerSO : ScriptableObject
     {
-        // public List<NodeLinkData> NodeLinkDatas = new List<NodeLinkData>();
-        // public List<StartNodeData> StartNodeDatas = new List<StartNodeData>();
-        // public List<DialogueNodeData> DialogueNodeDatas = new List<DialogueNodeData>();
-        // public List<EventNodeData> EventNodeDatas = new List<EventNodeData>();
-        // public List<BranchNodeData> BranchNodeDatas = new List<BranchNodeData>();
-        // public List<EndNodeData> EndNodeDatas = new List<EndNodeData>();
-        // public List<BaseNodeData> AllNodes
-        // {
-        //     get
-        //     {
-        //         var nodes = new List<BaseNodeData>();
-        //         nodes.AddRange(this.StartNodeDatas);
-        //         nodes.AddRange(this.DialogueNodeDatas);
-        //         nodes.AddRange(this.EventNodeDatas);
-        //         nodes.AddRange(this.BranchNodeDatas);
-        //         nodes.AddRange(this.EndNodeDatas);
-        //         return nodes;
-        //     }D
-        // }
+        public List<NodeLinkData> NodeLinkDatas = new List<NodeLinkData>();
+        public List<EndData> EndDatas = new List<EndData>();
+        public List<StartData> StartDatas = new List<StartData>();
+        public List<EventData> EventDatas = new List<EventData>();
+        public List<BranchData> BranchDatas = new List<BranchData>();
+        public List<DialogueData> DialogueDatas = new List<DialogueData>();
+        public List<ChoiceData> ChoiceDatas = new List<ChoiceData>();
+        public List<BaseData> AllDatas
+        {
+            get
+            {
+                var data = new List<BaseData>();
+                data.AddRange(this.EndDatas);
+                data.AddRange(this.StartDatas);
+                data.AddRange(this.EventDatas);
+                data.AddRange(this.BranchDatas);
+                data.AddRange(this.DialogueDatas);
+                data.AddRange(this.ChoiceDatas);
+                return data;
+            }
+        }
+    }
+
+    [System.Serializable]
+    public class NodeLinkData
+    {
+        public string BaseNodeGUID;
+        public string BasePortName;
+        public string TargetNodeGUID;
+        public string TargetPortName;
     }
 }

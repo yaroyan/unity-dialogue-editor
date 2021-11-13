@@ -8,18 +8,18 @@ namespace Dialogue
         /// <summary>
         /// 終了
         /// </summary>
-        End,
+        End = 1,
         /// <summary>
         /// 繰り返し
         /// </summary>
-        Repeat,
+        Repeat = 2,
         /// <summary>
         /// 戻る
         /// </summary>
-        GoBack,
+        GoBack = 3,
         /// <summary>
         /// 最初に戻る
         /// </summary>
-        ReturnToStart,
+        ReturnToStart = 4,
     }
 }

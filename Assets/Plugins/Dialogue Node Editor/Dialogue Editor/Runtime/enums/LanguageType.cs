@@ -5,7 +5,13 @@ namespace Dialogue
     /// </summary>
     public enum LanguageType
     {
-        English,
-        Japanese
+        /// <summary>
+        /// 英語
+        /// </summary>
+        English = 1,
+        /// <summary>
+        /// 日本語
+        /// </summary>
+        Japanese = 2,
     }
 }
