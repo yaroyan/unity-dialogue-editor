@@ -10,7 +10,7 @@ namespace Dialogue.Editor
 {
     public class DialogueGraphView : GraphView
     {
-        static readonly string s_graphViewStyleSheet = "USS/Dialogue/GraphView";
+        static readonly string s_graphViewStyleSheet = @"USS/Dialogue/GraphView/GraphView";
         DialogueEditorWindow _editorWindow;
         NodeSearchWindow _searchWindow;
 
@@ -58,8 +58,10 @@ namespace Dialogue.Editor
                 bool isSameDirection = startPort.direction == port.direction;
                 // 同一の型であるか
                 bool isSameType = startPort.portType == port.portType;
+                // 同一のポート色であるか
+                bool isSameColor = startPort.portColor == port.portColor;
                 // いずれかの条件に合致する場合、次のループに移行する
-                if (isSameNode || isSameDirection || !isSameType) continue;
+                if (isSameNode || isSameDirection || !isSameType || !isSameColor) continue;
 
                 compatiblePorts.Add(port);
             }

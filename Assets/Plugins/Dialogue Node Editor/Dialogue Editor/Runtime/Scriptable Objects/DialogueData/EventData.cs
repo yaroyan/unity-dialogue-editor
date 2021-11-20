@@ -7,6 +7,6 @@ namespace Dialogue
     public class EventData : BaseData
     {
         public List<EventData<EventModifierType>> EventDataModifiers = new List<EventData<EventModifierType>>();
-        public List<ContainerDialogueEventSO> DialogueEventSOs = new List<ContainerDialogueEventSO>();
+        public List<ContainerValue<DialogueEventSO>> DialogueEventSOs = new List<ContainerValue<DialogueEventSO>>();
     }
 }

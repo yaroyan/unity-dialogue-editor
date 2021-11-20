@@ -25,7 +25,7 @@ namespace Dialogue.Editor
         // Name of current open dialogue  container
         Label _nameOfDialogueContainer;
         // Name of the graph view style sheet
-        static readonly string s_graphViewStyleSheet = "USS/Dialogue/GraphView";
+        static readonly string s_graphViewStyleSheet = @"USS/Dialogue/EditorWindow/EditorWindow";
 
         /// <summary>
         /// エディタのツールバーにメニューアイテムを追加します。

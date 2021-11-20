@@ -57,13 +57,13 @@ namespace Dialogue
     {
         public ContainerEnumType(int value = 1)
         {
-            this.value = (T)System.Enum.ToObject(typeof(T), value);
+            this.Value = (T)System.Enum.ToObject(typeof(T), value);
         }
 
 #if UNITY_EDITOR
         public EnumField EnumField;
 #endif
-        public T value;
+        public T Value;
     }
 
     [System.Serializable]
@@ -72,7 +72,7 @@ namespace Dialogue
 #if UNITY_EDITOR
         public EnumField EnumField;
 #endif
-        public ChoiceStateType value = ChoiceStateType.Hidden;
+        public ChoiceStateType Value = ChoiceStateType.Hidden;
     }
 
     [System.Serializable]
@@ -81,7 +81,7 @@ namespace Dialogue
 #if UNITY_EDITOR
         public EnumField EnumField;
 #endif
-        public EndNodeType value = EndNodeType.End;
+        public EndNodeType Value = EndNodeType.End;
     }
 
     [System.Serializable]
@@ -90,7 +90,7 @@ namespace Dialogue
 #if UNITY_EDITOR
         public EnumField EnumField;
 #endif
-        public EventConditionType value = EventConditionType.True;
+        public EventConditionType Value = EventConditionType.True;
     }
 
     [System.Serializable]
@@ -99,7 +99,7 @@ namespace Dialogue
 #if UNITY_EDITOR
         public EnumField EnumField;
 #endif
-        public EventModifierType value = EventModifierType.SetTrue;
+        public EventModifierType Value = EventModifierType.SetTrue;
     }
 
     [System.Serializable]
@@ -131,6 +131,5 @@ namespace Dialogue
         // public ContainerValue<string> EventText = new ContainerValue<string>();
         // public ContainerValue<float> Number = new ContainerValue<float>();
         public ContainerEnumType<EventConditionType> EnumType = new ContainerEnumType<EventConditionType>();
-
     }
 }

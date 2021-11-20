@@ -10,22 +10,26 @@ namespace Dialogue.Editor
 {
     public class EndNode : BaseNode
     {
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
+        public EndData endData { get; set; } = new EndData();
         public EndNode() { }
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="position"></param>
-        /// <param name="editorWindow"></param>
-        /// <param name="graphView"></param>
         public EndNode(Vector2 position, DialogueEditorWindow editorWindow, DialogueGraphView graphView) : base(position, editorWindow, graphView)
         {
             title = "End";
+            styleSheets.Add(Resources.Load<StyleSheet>(@"USS/Dialogue/Node/EndNode"));
 
             AddInputPort("Input", Port.Capacity.Multi);
+
+            MakeMainContainer();
+        }
+
+        void MakeMainContainer()
+        {
+            mainContainer.Add(GetNewEnumField<EndNodeType>(endData.EnumType));
+        }
+
+        public override void LoadValueIntoField()
+        {
+            endData.EnumType.EnumField?.SetValueWithoutNotify(endData.EnumType.Value);
         }
     }
 }

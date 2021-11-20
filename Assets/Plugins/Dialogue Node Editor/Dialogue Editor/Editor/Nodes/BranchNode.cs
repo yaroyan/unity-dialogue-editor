@@ -13,48 +13,40 @@ namespace Dialogue.Editor
         public static readonly string s_TruePortName = "True";
         public static readonly string s_FalsePortName = "False";
 
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public BranchNode()
-        {
+        public BranchData BranchData { get; set; } = new BranchData();
 
-        }
-
-        /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        /// <param name="position">位置</param>
-        /// <param name="editorWindow"></param>
-        /// <param name="graphView"></param>
-        /// <returns></returns>
+        public BranchNode() { }
         public BranchNode(Vector2 position, DialogueEditorWindow editorWindow, DialogueGraphView graphView) : base(position, editorWindow, graphView)
         {
+            title = "Branch";
+            styleSheets.Add(Resources.Load<StyleSheet>(@"USS/Dialogue/Node/BranchNode"));
+
             AddInputPort("Input", Port.Capacity.Multi);
             AddOutputPort(s_TruePortName, Port.Capacity.Single);
             AddOutputPort(s_FalsePortName, Port.Capacity.Single);
-            // TopButton();
+
+            TopButton();
         }
 
-        // /// <summary>
-        // /// トップボタンを生成します。
-        // /// </summary>
-        // public void TopButton()
-        // {
-        //     var menu = new ToolbarMenu();
-        //     menu.text = "Add Condition";
+        /// <summary>
+        /// トップボタンを生成します。
+        /// </summary>
+        public void TopButton()
+        {
+            var menu = new ToolbarMenu();
+            menu.text = "Add Condition";
 
-        //     menu.menu.AppendAction("String Condition", new System.Action<DropdownMenuAction>(x => AddCondition()));
-        //     titleButtonContainer.Add(menu);
-        // }
+            menu.menu.AppendAction("Event Condition", new System.Action<DropdownMenuAction>(x => AddCondition()));
+            titleButtonContainer.Add(menu);
+        }
 
-        // /// <summary>
-        // /// 条件を追加します。
-        // /// </summary>
-        // /// <param name="stringIdData"></param>
-        // public void AddCondition(BranchStringIdData stringIdData = null)
-        // {
-
-        // }
+        /// <summary>
+        /// 条件を追加します。
+        /// </summary>
+        /// <param name="stringIdData"></param>
+        public void AddCondition(EventData<EventConditionType> eventData = null)
+        {
+            AddConditionEventBuild(BranchData.EventDataConditions, eventData);
+        }
     }
 }

@@ -45,6 +45,7 @@ namespace Dialogue.Editor
             AddNodeSearchTreeEntry<BranchNode>("Branch", level, new BranchNode()),
             AddNodeSearchTreeEntry<EventNode>("Event", level, new EventNode()),
             AddNodeSearchTreeEntry<EndNode>("End", level, new EndNode()),
+            AddNodeSearchTreeEntry<ChoiceNode>("Choice", level, new ChoiceNode()),
         };
             return tree;
 
@@ -60,7 +61,6 @@ namespace Dialogue.Editor
                 context.screenMousePosition - _editorWindow.position.position
             );
             var localMousePosition = _graphView.contentViewContainer.WorldToLocal(worldMousePosition);
-
             switch (searchTreeEntry.userData)
             {
                 case StartNode node:
@@ -77,6 +77,9 @@ namespace Dialogue.Editor
                     return true;
                 case EndNode node:
                     _graphView.AddElement(_graphView.CreateNode<EndNode>(localMousePosition));
+                    return true;
+                case ChoiceNode node:
+                    _graphView.AddElement(_graphView.CreateNode<ChoiceNode>(localMousePosition));
                     return true;
                 default:
                     return false;
