@@ -12,8 +12,8 @@ namespace Dialogue.Editor
 {
     public class LoadCSV
     {
-        // static readonly string _directoryPath = "Resources/Dialogue Editor/CSV";
-        // string _fileName = "DialogueCSV_Load.csv";
+        static readonly string _directoryPath = "Resources/Dialogue Editor/CSV";
+        string _fileName = "DialogueCSV_Load.csv";
         CsvConfiguration _config = new CsvConfiguration(System.Globalization.CultureInfo.InvariantCulture)
         {
             // ヘッダーの有無の指定
@@ -33,68 +33,57 @@ namespace Dialogue.Editor
         /// </summary>
         public void Load()
         {
-            // var path = $"{Application.dataPath}/{_directoryPath}/{_fileName}";
-            // using (var cr = new CsvReader(new StreamReader(path), this._config))
-            // {
-            //     // ヘッダーの読み込み
-            //     cr.Read();
-            //     cr.ReadHeader();
-            //     var header = cr.HeaderRecord;
+            var path = $"{Application.dataPath}/{_directoryPath}/{_fileName}";
+            using (var cr = new CsvReader(new StreamReader(path), this._config))
+            {
+                // ヘッダーの読み込み
+                cr.Read();
+                cr.ReadHeader();
+                var header = cr.HeaderRecord;
 
-            //     // アセットのロード
-            //     var dialogueContainers = Helper.FindAllDialogueContainerSO();
+                // アセットのロード
+                var dialogueContainers = Helper.FindAllDialogueContainerSO();
 
-            //     // レコードの読み込み
-            //     while (cr.Read())
-            //     {
-            //         var records = cr.Parser.Record;
-            //         foreach (var dialogueContainer in dialogueContainers)
-            //         {
-            //             foreach (var nodeData in dialogueContainer.DialogueNodeDatas)
-            //             {
-            //                 LoadToNode(records, header, nodeData);
-            //                 foreach (var nodePort in nodeData.DialogueNodePorts)
-            //                 {
-            //                     LoadToNodePort(records, header, nodePort);
-            //                 }
-            //             }
-            //             EditorUtility.SetDirty(dialogueContainer);
-            //             AssetDatabase.SaveAssets();
-            //         }
-            //     }
-            // }
+                // レコードの読み込み
+                while (cr.Read())
+                {
+                    var record = cr.Parser.Record;
+                    foreach (var dialogueContainer in dialogueContainers)
+                    {
+                        foreach (var nodeData in dialogueContainer.DialogueDatas)
+                            foreach (var text in nodeData.DialogueDataTexts)
+                                LoadIntoDialogueNodeText(record, header, text);
+
+                        foreach (var nodeData in dialogueContainer.ChoiceDatas)
+                            LoadIntoChoiceNode(record, header, nodeData);
+
+                        EditorUtility.SetDirty(dialogueContainer);
+                        AssetDatabase.SaveAssets();
+                    }
+                }
+            }
         }
 
-        // /// <summary>
-        // /// ノードにデータをロードします。
-        // /// </summary>
-        // /// <param name="records"></param>
-        // /// <param name="header"></param>
-        // /// <param name="nodeData"></param>
-        // void LoadToNode(IReadOnlyList<string> records, IReadOnlyList<string> header, DialogueNodeData nodeData)
-        // {
-        // if (records[0] != nodeData.NodeGUID) return;
-        // for (int i = 1; i < records.Count; i++) foreach (var languageType in Enum.GetValues(typeof(LanguageType)) as LanguageType[])
-        //     {
-        //         if (header[i] != languageType.ToString()) continue;
-        //         nodeData.TextLanguages.Find(x => x.LanguageType == languageType).LanguageGenericType = records[i];
-        //     }
-        // }
+        void LoadIntoDialogueNodeText(IReadOnlyList<string> record, IReadOnlyList<string> header, DialogueDataText text)
+        {
+            if (record[2] != text.GUID.Value) return;
+            for (var i = 0; i < record.Count; i++)
+                foreach (LanguageType languageType in (LanguageType[])Enum.GetValues(typeof(LanguageType)))
+                {
+                    if (header[i] != languageType.ToString()) continue;
+                    text.Texts.Find(x => x.LanguageType == languageType).LanguageGenericType = record[i];
+                }
+        }
 
-        // /// <summary>
-        // /// ポートにデータをロードします。
-        // /// </summary>
-        // /// <param name="records"></param>
-        // /// <param name="header"></param>
-        // /// <param name="nodePort"></param>
-        // void LoadToNodePort(IReadOnlyList<string> records, IReadOnlyList<string> header, DialogueNodePort nodePort)
-        // {
-        // if (records[0] != nodePort.PortGUID) return;
-        // for (int i = 1; i < records.Count; i++) foreach (var languageType in Enum.GetValues(typeof(LanguageType)) as LanguageType[])
-        //     {
-        //         if (header[i] != languageType.ToString()) continue;
-        //         nodePort.TextLangueages.Find(language => language.LanguageType == languageType).LanguageGenericType = records[i];
-        //     }
-        // }
+        void LoadIntoChoiceNode(IReadOnlyList<string> record, IReadOnlyList<string> header, ChoiceData nodeData)
+        {
+            if (record[1] != nodeData.GUID) return;
+            for (var i = 0; i < record.Count; i++)
+                foreach (LanguageType languageType in (LanguageType[])Enum.GetValues(typeof(LanguageType)))
+                {
+                    if (header[i] != languageType.ToString()) continue;
+                    nodeData.Texts.Find(x => x.LanguageType == languageType).LanguageGenericType = record[i];
+                }
+        }
     }
 }

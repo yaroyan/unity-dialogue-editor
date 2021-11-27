@@ -607,8 +607,8 @@ namespace Dialogue.Editor
 
             CheckText();
             onFocusOut();
-            textField.RegisterCallback<FocusEvent>(evt => onFocusIn());
-            textField.RegisterCallback<FocusEvent>(evt => onFocusOut());
+            textField.RegisterCallback<FocusInEvent>(evt => onFocusIn());
+            textField.RegisterCallback<FocusOutEvent>(evt => onFocusOut());
 
             void onFocusIn()
             {

@@ -117,7 +117,7 @@ namespace Dialogue.Editor
         public void TextLine(DialogueDataText dialogueDataText = null)
         {
             var newDialogueBaseContainerText = new DialogueDataText();
-            DialogueData.DialogueDataBaseContainers.Add(newDialogueBaseContainerText);
+            DialogueData.BaseDialogueDataContainers.Add(newDialogueBaseContainerText);
 
             // Add Container Box
             var boxContainer = new Box();
@@ -164,7 +164,7 @@ namespace Dialogue.Editor
                 dialogueImage.SpriteLeft.Value = dataImage.SpriteLeft.Value;
                 dialogueImage.SpriteRight.Value = dataImage.SpriteRight.Value;
             }
-            DialogueData.DialogueDataBaseContainers.Add(dialogueImage);
+            DialogueData.BaseDialogueDataContainers.Add(dialogueImage);
 
             var boxContainer = new Box();
             boxContainer.AddToClassList("DialogueBox");
@@ -180,7 +180,7 @@ namespace Dialogue.Editor
             var dialogueName = new DialogueDataName();
             if (dataName != null)
                 dialogueName.CharacterName.Value = dataName.CharacterName.Value;
-            DialogueData.DialogueDataBaseContainers.Add(dialogueName);
+            DialogueData.BaseDialogueDataContainers.Add(dialogueName);
 
             var boxContainer = new Box();
             boxContainer.AddToClassList("CharacterNameBox");
@@ -193,7 +193,7 @@ namespace Dialogue.Editor
 
         // Fields --------------------------------------------------------------------------------------
 
-        void AddLabelAndButton(DialogueDataBaseContainer container, Box boxContainer, string labelName, string uniqueUSS = "")
+        void AddLabelAndButton(BaseDialogueDataContainer container, Box boxContainer, string labelName, string uniqueUSS = "")
         {
             var topBoxContainer = new Box();
             topBoxContainer.AddToClassList("TopBox");
@@ -216,7 +216,7 @@ namespace Dialogue.Editor
             {
                 DeleteBox(boxContainer);
                 _boxes.Remove(boxContainer);
-                DialogueData.DialogueDataBaseContainers.Remove(container);
+                DialogueData.BaseDialogueDataContainers.Remove(container);
             }, "TextRemoveButton");
 
             _boxes.Add(boxContainer);
@@ -279,39 +279,39 @@ namespace Dialogue.Editor
 
         // ------------------------------------------------------------------------------------------
 
-        void MoveBox(DialogueDataBaseContainer container, bool moveUp)
+        void MoveBox(BaseDialogueDataContainer container, bool moveUp)
         {
-            var tmpDialogueBaseContainers = new List<DialogueDataBaseContainer>();
-            tmpDialogueBaseContainers.AddRange(DialogueData.DialogueDataBaseContainers);
+            var tmpDialogueBaseContainers = new List<BaseDialogueDataContainer>();
+            tmpDialogueBaseContainers.AddRange(DialogueData.BaseDialogueDataContainers);
 
             foreach (Box box in _boxes)
                 mainContainer.Remove(box);
             _boxes.Clear();
 
             for (int i = 0; i < tmpDialogueBaseContainers.Count; i++)
-                tmpDialogueBaseContainers[i].ID.Value = i;
+                tmpDialogueBaseContainers[i].Order.Value = i;
 
 
-            if (container.ID.Value > 0 && moveUp)
+            if (container.Order.Value > 0 && moveUp)
             {
-                DialogueDataBaseContainer tmp01 = tmpDialogueBaseContainers[container.ID.Value];
-                DialogueDataBaseContainer tmp02 = tmpDialogueBaseContainers[container.ID.Value - 1];
+                BaseDialogueDataContainer tmp01 = tmpDialogueBaseContainers[container.Order.Value];
+                BaseDialogueDataContainer tmp02 = tmpDialogueBaseContainers[container.Order.Value - 1];
 
-                tmpDialogueBaseContainers[container.ID.Value] = tmp02;
-                tmpDialogueBaseContainers[container.ID.Value - 1] = tmp01;
+                tmpDialogueBaseContainers[container.Order.Value] = tmp02;
+                tmpDialogueBaseContainers[container.Order.Value - 1] = tmp01;
             }
-            else if (container.ID.Value < tmpDialogueBaseContainers.Count - 1 && !moveUp)
+            else if (container.Order.Value < tmpDialogueBaseContainers.Count - 1 && !moveUp)
             {
-                DialogueDataBaseContainer tmp01 = tmpDialogueBaseContainers[container.ID.Value];
-                DialogueDataBaseContainer tmp02 = tmpDialogueBaseContainers[container.ID.Value + 1];
+                BaseDialogueDataContainer tmp01 = tmpDialogueBaseContainers[container.Order.Value];
+                BaseDialogueDataContainer tmp02 = tmpDialogueBaseContainers[container.Order.Value + 1];
 
-                tmpDialogueBaseContainers[container.ID.Value] = tmp02;
-                tmpDialogueBaseContainers[container.ID.Value + 1] = tmp01;
+                tmpDialogueBaseContainers[container.Order.Value] = tmp02;
+                tmpDialogueBaseContainers[container.Order.Value + 1] = tmp01;
             }
 
-            DialogueData.DialogueDataBaseContainers.Clear();
+            DialogueData.BaseDialogueDataContainers.Clear();
 
-            foreach (DialogueDataBaseContainer dialogueDataBaseContainer in tmpDialogueBaseContainers)
+            foreach (BaseDialogueDataContainer dialogueDataBaseContainer in tmpDialogueBaseContainers)
             {
                 switch (dialogueDataBaseContainer)
                 {

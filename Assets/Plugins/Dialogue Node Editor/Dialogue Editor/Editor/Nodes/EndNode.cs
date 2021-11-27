@@ -10,7 +10,7 @@ namespace Dialogue.Editor
 {
     public class EndNode : BaseNode
     {
-        public EndData endData { get; set; } = new EndData();
+        public EndData EndData { get; set; } = new EndData();
         public EndNode() { }
         public EndNode(Vector2 position, DialogueEditorWindow editorWindow, DialogueGraphView graphView) : base(position, editorWindow, graphView)
         {
@@ -24,12 +24,12 @@ namespace Dialogue.Editor
 
         void MakeMainContainer()
         {
-            mainContainer.Add(GetNewEnumField<EndNodeType>(endData.EnumType));
+            mainContainer.Add(GetNewEnumField<EndNodeType>(EndData.EnumType));
         }
 
         public override void LoadValueIntoField()
         {
-            endData.EnumType.EnumField?.SetValueWithoutNotify(endData.EnumType.Value);
+            EndData.EnumType.EnumField?.SetValueWithoutNotify(EndData.EnumType.Value);
         }
     }
 }

@@ -21,12 +21,12 @@
 
 .MoveUpButton {
 	margin-left: auto;
-	background-image: resource("Icons/arrowUp");
+	background-image: resource("Icons/icooon-mono/up");
 }
 
 .MoveDownButton {
 	margin-left: auto;
-	background-image: resource("Icons/arrowDown");
+	background-image: resource("Icons/icooon-mono/down");
 }
 
 .ButtonBox {

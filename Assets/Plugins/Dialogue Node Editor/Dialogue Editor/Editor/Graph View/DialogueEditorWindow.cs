@@ -84,7 +84,7 @@ namespace Dialogue.Editor
             this._graphView = new DialogueGraphView(editorWindow: this);
             this._graphView.StretchToParentSize();
             rootVisualElement.Add(_graphView);
-            // this._dataOperator = new DialogueDataOperator(this._graphView);
+            this._dataOperator = new DialogueDataOperator(this._graphView);
 
         }
 
@@ -162,7 +162,7 @@ namespace Dialogue.Editor
         void Save()
         {
             if (this._currentDialogueContainer is null) return;
-            // this._dataOperator.Save(this._currentDialogueContainer);
+            this._dataOperator.Save(this._currentDialogueContainer);
         }
 
         /// <summary>
@@ -170,12 +170,10 @@ namespace Dialogue.Editor
         /// </summary>
         void Load()
         {
-            if (this._currentDialogueContainer != null)
-            {
-                Language(LanguageType.Japanese);
-                this._nameOfDialogueContainer.text = "Name: " + _currentDialogueContainer.name;
-                // this._dataOperator.Load(this._currentDialogueContainer);
-            }
+            if (this._currentDialogueContainer is null) return;
+            Language(LanguageType.Japanese);
+            this._nameOfDialogueContainer.text = "Name: " + _currentDialogueContainer.name;
+            this._dataOperator.Load(this._currentDialogueContainer);
         }
 
         /// <summary>

@@ -10,12 +10,6 @@ namespace Dialogue
     public class DialogueContainerValues { }
 
     [System.Serializable]
-    public class ContainerDialogueEventSO
-    {
-        public DialogueEventSO DialogueEventSO;
-    }
-
-    [System.Serializable]
     public class LanguageGeneric<T>
     {
         public LanguageType LanguageType;
@@ -27,31 +21,7 @@ namespace Dialogue
     {
         public T Value;
     }
-
-    [System.Serializable]
-    public class ContainerString
-    {
-        public string Value;
-    }
-
-    [System.Serializable]
-    public class ContainerInt
-    {
-        public int Value;
-    }
-
-    [System.Serializable]
-    public class ContainerFloat
-    {
-        public float Value;
-    }
-
-    [System.Serializable]
-    public class ContainerSprite
-    {
-        public Sprite Value;
-    }
-
+    
     [System.Serializable]
     public class ContainerEnumType<T> where T : System.Enum
     {

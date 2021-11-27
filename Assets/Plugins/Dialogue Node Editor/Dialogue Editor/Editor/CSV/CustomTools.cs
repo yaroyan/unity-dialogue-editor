@@ -7,7 +7,7 @@ namespace Dialogue.Editor
 {
     public class CustomTools
     {
-        [MenuItem("Custom Tools/Dialogue/Save to CSV")]
+        [MenuItem("Tools/Dialogue Editor/Save to CSV")]
         public static void SaveToCSV()
         {
             SaveCSV saveCSV = new SaveCSV();
@@ -17,7 +17,7 @@ namespace Dialogue.Editor
             Debug.Log("<color=green> Save to CSV file Successfully </color>");
         }
 
-        [MenuItem("Custom Tools/Dialogue/Load from CSV")]
+        [MenuItem("Tools/Dialogue Editor/Load from CSV")]
         public static void LoadFromCSV()
         {
             LoadCSV loadCSV = new LoadCSV();
@@ -25,16 +25,6 @@ namespace Dialogue.Editor
 
             EditorApplication.Beep();
             Debug.Log("<color=green> Load from CSV file Successfully </color>");
-        }
-
-        [MenuItem("Custom Tools/Dialogue/Update Dialogue Language")]
-        public static void UpdateDialogueLanguage()
-        {
-            var updateLanguageType = new UpdateLanguageType();
-            updateLanguageType.UpdateLanguage();
-
-            EditorApplication.Beep();
-            Debug.Log("<color=green> Update Language Successfully </color>");
         }
     }
 }

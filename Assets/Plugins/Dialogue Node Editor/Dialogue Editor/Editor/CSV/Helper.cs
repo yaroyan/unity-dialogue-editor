@@ -27,7 +27,7 @@ namespace Dialogue.Editor
             foreach (var directory in directories)
             {
                 var directoryPath = directory.Substring(resourcesPath.Length + 1);
-                var results = Resources.LoadAll(directoryPath, typeof(T)).Cast<T>().ToArray();
+                var results = Resources.LoadAll(directoryPath, typeof(T)).Cast<T>();
                 foreach (var result in results) if (!list.Contains(result)) list.Add(result);
             }
             return list;
@@ -40,7 +40,7 @@ namespace Dialogue.Editor
         public static List<DialogueContainerSO> FindAllDialogueContainerSO()
         {
             // Find all the DialogueContainerSO in Assets and get it GUID.
-            string[] GUIDs = AssetDatabase.FindAssets("DialogueContainerSO");
+            string[] GUIDs = AssetDatabase.FindAssets("t:DialogueContainerSO");
             // Make a Array  as long as we found DialogueContainerSO.
             var items = new DialogueContainerSO[GUIDs.Length];
             for (int i = 0; i < GUIDs.Length; i++)
