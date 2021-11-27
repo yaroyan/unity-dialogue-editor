@@ -1,10 +1,25 @@
-# Dialogue-Editor-Tutorial
-A Unity Dialogue Editor
+# Unity Dialogue Node Editor
 
-Unity 2019.4.16f1
+Unityでシナリオやキャラクターの台詞を管理することを目的にしたノードベースエディタです。
 
-### Setup
-- Models and Animations for Npc and Player.
-- Basic UI for dialogue.
-- Player movement.
-![](https://imgur.com/YnXOSSw.png)
+# DEMO
+
+# Features
+
+GraphViewによって実装されています。
+
+# Requirement
+
+* Unity 2020.3.16f1
+
+# Installation
+
+# Usage
+
+# Note
+
+# Author
+
+# License
+
+[MIT license](https://en.wikipedia.org/wiki/MIT_License)
