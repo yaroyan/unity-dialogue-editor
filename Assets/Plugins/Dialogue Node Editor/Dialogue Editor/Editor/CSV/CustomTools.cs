@@ -17,6 +17,16 @@ namespace Dialogue.Editor
             Debug.Log("<color=green> Save to CSV file Successfully </color>");
         }
 
+        [MenuItem("Tools/Dialogue Editor/Save to CSV By File")]
+        public static void SaveToCSVByFile()
+        {
+            SaveCSV saveCSV = new SaveCSV();
+            saveCSV.SaveByFile();
+
+            EditorApplication.Beep();
+            Debug.Log("<color=green> Save to CSV file Successfully </color>");
+        }
+
         [MenuItem("Tools/Dialogue Editor/Load from CSV")]
         public static void LoadFromCSV()
         {

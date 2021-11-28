@@ -12,7 +12,6 @@ namespace Dialogue.Editor
 {
     public class LoadCSV
     {
-        static readonly string _directoryPath = "Resources/Dialogue Editor/CSV";
         string _fileName = "DialogueCSV_Load.csv";
         CsvConfiguration _config = new CsvConfiguration(System.Globalization.CultureInfo.InvariantCulture)
         {
@@ -33,7 +32,7 @@ namespace Dialogue.Editor
         /// </summary>
         public void Load()
         {
-            var path = $"{Application.dataPath}/{_directoryPath}/{_fileName}";
+            var path = $"{Helper.GetResourcesPath()}/{_fileName}";
             using (var cr = new CsvReader(new StreamReader(path), this._config))
             {
                 // ヘッダーの読み込み
@@ -42,7 +41,7 @@ namespace Dialogue.Editor
                 var header = cr.HeaderRecord;
 
                 // アセットのロード
-                var dialogueContainers = Helper.FindAllDialogueContainerSO();
+                var dialogueContainers = Helper.FindAllSOResources<DialogueContainerSO>();
 
                 // レコードの読み込み
                 while (cr.Read())
