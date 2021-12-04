@@ -146,14 +146,7 @@ namespace Dialogue.Editor
         void ToggleVisibilityForMiniMap()
         {
             var miniMap = this._graphView.Q<MiniMap>("MiniMap");
-            if (miniMap is null)
-            {
-                GenerateMiniMap();
-            }
-            else
-            {
-                this._graphView.Remove(miniMap);
-            }
+            if (miniMap is null) GenerateMiniMap(); else this._graphView.Remove(miniMap);
         }
 
         /// <summary>
