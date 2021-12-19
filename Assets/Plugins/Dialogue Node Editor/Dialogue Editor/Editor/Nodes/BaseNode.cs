@@ -39,6 +39,8 @@ namespace Dialogue.Editor
             SetPosition(new Rect(position, DefaultNodeSize));
         }
 
+        protected void AddToClassLists(VisualElement element, params string[] classLists) => classLists.Where(e => !string.IsNullOrWhiteSpace(e)).ToList().ForEach(e => element.AddToClassList(e));
+
         /// <summary>
         /// 新規ラベルを生成します。
         /// </summary>
@@ -46,11 +48,10 @@ namespace Dialogue.Editor
         /// <param name="USS01"></param>
         /// <param name="USS02"></param>
         /// <returns></returns>
-        protected Label GetNewLabel(string labelName, string USS01 = "", string USS02 = "")
+        protected Label GetNewLabel(string labelName, params string[] USSClasses)
         {
             var label = new Label(labelName);
-            label.AddToClassList(USS01);
-            label.AddToClassList(USS02);
+            AddToClassLists(label, USSClasses);
             return label;
         }
 
@@ -61,11 +62,10 @@ namespace Dialogue.Editor
         /// <param name="USS01"></param>
         /// <param name="USS02"></param>
         /// <returns></returns>
-        protected Button GetNewButton(string buttonText, string USS01 = "", string USS02 = "")
+        protected Button GetNewButton(string buttonText, params string[] USSClasses)
         {
             var button = new Button() { text = buttonText };
-            button.AddToClassList(USS01);
-            button.AddToClassList(USS02);
+            AddToClassLists(button, USSClasses);
             return button;
         }
 
@@ -76,311 +76,30 @@ namespace Dialogue.Editor
         /// <param name="USS01"></param>
         /// <param name="USS02"></param>
         /// <returns></returns>
-        protected Button GetNewButton(string buttonText, System.Action action, string USS01 = "", string USS02 = "")
+        protected Button GetNewButton(string buttonText, System.Action action, params string[] USSClasses)
         {
-            var button = GetNewButton(buttonText, USS01, USS02);
+            var button = GetNewButton(buttonText, USSClasses);
             button.clicked += action;
+            AddToClassLists(button, USSClasses);
             return button;
         }
 
-        protected T1 GetNewField<T1, T2>(ContainerValue<T2> inputValue, string USS01 = "", string USS02 = "") where T1 : BaseField<T2>, new()
+        protected T1 GetNewField<T1, T2>(ContainerValue<T2> inputValue, params string[] USSClasses) where T1 : BaseField<T2>, new()
         {
-            var field = new T1();
+            var field = GetNewField<T1>(USSClasses);
             field.RegisterValueChangedCallback(value => inputValue.Value = value.newValue);
             field.SetValueWithoutNotify(inputValue.Value);
-            field.AddToClassList(USS01);
-            field.AddToClassList(USS02);
             return field;
         }
 
-        protected T GetNewField<T>(string USS01 = "", string USS02 = "") where T : VisualElement, new()
+        protected T GetNewField<T>(params string[] USSClasses) where T : VisualElement, new()
         {
             var field = new T();
-            field.AddToClassList(USS01);
-            field.AddToClassList(USS02);
+            AddToClassLists(field, USSClasses);
             return field;
         }
 
-        // protected TextField GetNewTextField(ContainerValue<string> inputValue, string placeHolderText, string USS01 = "", string USS02 = "")
-        // {
-        //     var textField = new TextField();
-        //     textField.RegisterValueChangedCallback(value => inputValue.Value = value.newValue);
-        //     textField.SetValueWithoutNotify(inputValue.Value);
-        //     textField.AddToClassList(USS01);
-        //     textField.AddToClassList(USS02);
-        //     SetPlaceHolderText(textField, placeHolderText);
-        //     return textField;
-        // }
-
-        protected TextField GetNewTextField(ContainerValue<string> inputValue, string placeHolderText, string USS01 = "", string USS02 = "")
-        {
-            var textField = GetNewField<TextField, string>(inputValue, USS01, USS02);
-            SetPlaceHolderText(textField, placeHolderText);
-            return textField;
-        }
-
-        /// <summary>
-        /// Get a new TextField that use a List<LanguageGeneric<string>> text.
-        /// </summary>
-        /// <param name="Text">List of LanguageGeneric<string> Text</param>
-        /// <param name="placeholderText">The text that will be displayed if the text field is empty</param>
-        /// <param name="USS01">USS class add to the UI element</param>
-        /// <param name="USS02">USS class add to the UI element</param>
-        /// <returns></returns>
-        protected TextField GetNewTextFieldTextLanguage(List<LanguageGeneric<string>> Text, string placeholderText = "", string USS01 = "", string USS02 = "")
-        {
-            // Add languages
-            foreach (LanguageType language in (LanguageType[])System.Enum.GetValues(typeof(LanguageType)))
-            {
-                Text.Add(new LanguageGeneric<string>
-                {
-                    LanguageType = language,
-                    LanguageGenericType = ""
-                });
-            }
-
-            var textField = GetNewField<TextField>(USS01, USS02);
-
-            // Add it to the reaload current language list.
-            _languageGenericHolderTexts.Add(new LanguageGenericHolderText(Text, textField, placeholderText));
-
-            // When we change the variable from graph view.
-            textField.RegisterValueChangedCallback(value =>
-            {
-                Text.Find(text => text.LanguageType == EditorWindow.SelectedLanguage).LanguageGenericType = value.newValue;
-            });
-            textField.SetValueWithoutNotify(Text.Find(text => text.LanguageType == EditorWindow.SelectedLanguage).LanguageGenericType);
-
-            // Text field is set to be multiline.
-            textField.multiline = true;
-
-            return textField;
-        }
-
-        /// <summary>
-        /// Get a new ObjectField that use List<LanguageGeneric<AudioClip>>.
-        /// </summary>
-        /// <param name="audioClips"></param>
-        /// <param name="USS01">USS class add to the UI element</param>
-        /// <param name="USS02">USS class add to the UI element</param>
-        /// <returns></returns>
-        protected ObjectField GetNewObjectFieldAudioClipsLanguage(List<LanguageGeneric<AudioClip>> audioClips, string USS01 = "", string USS02 = "")
-        {
-            // Add languages.
-            foreach (LanguageType language in (LanguageType[])System.Enum.GetValues(typeof(LanguageType)))
-            {
-                audioClips.Add(new LanguageGeneric<AudioClip>
-                {
-                    LanguageType = language,
-                    LanguageGenericType = null
-                });
-            }
-
-            // Make ObjectField.
-            ObjectField objectField = new ObjectField()
-            {
-                objectType = typeof(AudioClip),
-                allowSceneObjects = false,
-                value = audioClips.Find(audioClip => audioClip.LanguageType == EditorWindow.SelectedLanguage).LanguageGenericType,
-            };
-
-            // Add it to the reaload current language list.
-            _languageGenericHolderAudioClips.Add(new LanguageGenericHolderAudioClip(audioClips, objectField));
-
-            // When we change the variable from graph view.
-            objectField.RegisterValueChangedCallback(value =>
-            {
-                audioClips.Find(audioClip => audioClip.LanguageType == EditorWindow.SelectedLanguage).LanguageGenericType = value.newValue as AudioClip;
-            });
-            objectField.SetValueWithoutNotify(audioClips.Find(audioClip => audioClip.LanguageType == EditorWindow.SelectedLanguage).LanguageGenericType);
-
-            // Set uss class for stylesheet.
-            objectField.AddToClassList(USS01);
-            objectField.AddToClassList(USS02);
-
-            return objectField;
-        }
-
-        protected IntegerField GetNewIntegerField(ContainerValue<int> inputValue, string USS01 = "", string USS02 = "")
-        {
-            var integerField = new IntegerField();
-            integerField.RegisterValueChangedCallback(value => inputValue.Value = value.newValue);
-            integerField.SetValueWithoutNotify(inputValue.Value);
-            integerField.AddToClassList(USS01);
-            integerField.AddToClassList(USS02);
-            return integerField;
-        }
-
-        protected FloatField GetNewFloatField(ContainerValue<float> inputValue, string USS01 = "", string USS02 = "")
-        {
-            var floatFiled = new FloatField();
-            floatFiled.RegisterValueChangedCallback(value => inputValue.Value = value.newValue);
-            floatFiled.SetValueWithoutNotify(inputValue.Value);
-            floatFiled.AddToClassList(USS01);
-            floatFiled.AddToClassList(USS02);
-            return floatFiled;
-        }
-
-        protected Image GetNewImage(string USS01 = "", string USS02 = "")
-        {
-            var image = new Image();
-            image.AddToClassList(USS01);
-            image.AddToClassList(USS02);
-            return image;
-        }
-
-        protected ObjectField GetNewObjectFieldSprite(ContainerValue<Sprite> inputSprite, Image imagePreview, string USS01 = "", string USS02 = "")
-        {
-            ObjectField objectField = new ObjectField
-            {
-                objectType = typeof(Sprite),
-                allowSceneObjects = false,
-                value = inputSprite.Value
-            };
-            objectField.RegisterValueChangedCallback(value =>
-            {
-                inputSprite.Value = value.newValue as Sprite;
-                imagePreview.image = inputSprite.Value != null ? inputSprite.Value.texture : null;
-            });
-            imagePreview.image = inputSprite.Value != null ? inputSprite.Value.texture : null;
-            objectField.AddToClassList(USS01);
-            objectField.AddToClassList(USS02);
-            return objectField;
-        }
-
-        protected ObjectField GetNewObjectField<T>(ContainerValue<T> containerValue, string USS01 = "", string USS02 = "") where T : Object
-        {
-            ObjectField objectField = new ObjectField
-            {
-                objectType = typeof(T),
-                allowSceneObjects = false,
-                value = containerValue.Value
-            };
-            objectField.RegisterValueChangedCallback(value => containerValue.Value = value.newValue as T);
-            objectField.SetValueWithoutNotify(containerValue.Value);
-            objectField.AddToClassList(USS01);
-            objectField.AddToClassList(USS02);
-            return objectField;
-        }
-
-        protected ObjectField GetNewObjectFieldDialogueEvent(ContainerValue<DialogueEventSO> inputDialogueEventSO, string USS01 = "", string USS02 = "")
-        {
-            ObjectField objectField = new ObjectField
-            {
-                objectType = typeof(DialogueEventSO),
-                allowSceneObjects = false,
-                value = inputDialogueEventSO.Value
-            };
-            objectField.RegisterValueChangedCallback(value => inputDialogueEventSO.Value = value.newValue as DialogueEventSO);
-            objectField.SetValueWithoutNotify(inputDialogueEventSO.Value);
-            objectField.AddToClassList(USS01);
-            objectField.AddToClassList(USS02);
-            return objectField;
-        }
-
-        protected EnumField GetNewEnumField<T>(ContainerEnumType<T> enumType, string USS01 = "", string USS02 = "") where T : System.Enum
-        {
-            var enumField = new EnumField
-            {
-                value = enumType.Value
-            };
-            enumField.Init(enumType.Value);
-            enumField.RegisterValueChangedCallback(value => enumType.Value = (T)value.newValue);
-            enumField.SetValueWithoutNotify(enumType.Value);
-            enumField.AddToClassList(USS01);
-            enumField.AddToClassList(USS02);
-            enumType.EnumField = enumField;
-            return enumField;
-        }
-
-        protected EnumField GetNewEnumField<T>(ContainerEnumType<T> enumType, System.Action action, string USS01 = "", string USS02 = "") where T : System.Enum
-        {
-            var enumField = new EnumField
-            {
-                value = enumType.Value
-            };
-            enumField.Init(enumType.Value);
-            enumField.RegisterValueChangedCallback(value =>
-            {
-                enumType.Value = (T)value.newValue;
-                action?.Invoke();
-            });
-            enumField.SetValueWithoutNotify(enumType.Value);
-            enumField.AddToClassList(USS01);
-            enumField.AddToClassList(USS02);
-            enumType.EnumField = enumField;
-            return enumField;
-        }
-
-        protected EnumField GetNewEnumFieldChoiceStateType(ContainerEnumType<ChoiceStateType> enumType, string USS01 = "", string USS02 = "")
-        {
-            var enumField = new EnumField
-            {
-                value = enumType.Value
-            };
-            enumField.Init(enumType.Value);
-            enumField.RegisterValueChangedCallback(value => enumType.Value = (ChoiceStateType)value.newValue);
-            enumField.SetValueWithoutNotify(enumType.Value);
-            enumField.AddToClassList(USS01);
-            enumField.AddToClassList(USS02);
-            enumType.EnumField = enumField;
-            return enumField;
-        }
-
-        protected EnumField GetNewEnumFieldEndNodeType(ContainerEnumType<EndNodeType> enumType, string USS01 = "", string USS02 = "")
-        {
-            var enumField = new EnumField
-            {
-                value = enumType.Value
-            };
-            enumField.Init(enumType.Value);
-            enumField.RegisterValueChangedCallback(value => enumType.Value = (EndNodeType)value.newValue);
-            enumField.SetValueWithoutNotify(enumType.Value);
-            enumField.AddToClassList(USS01);
-            enumField.AddToClassList(USS02);
-            enumType.EnumField = enumField;
-            return enumField;
-        }
-
-        protected EnumField GetNewEnumFieldEventModifierType(ContainerEnumType<EventModifierType> enumType, System.Action action, string USS01 = "", string USS02 = "")
-        {
-            var enumField = new EnumField
-            {
-                value = enumType.Value
-            };
-            enumField.Init(enumType.Value);
-            enumField.RegisterValueChangedCallback(value =>
-            {
-                enumType.Value = (EventModifierType)value.newValue;
-                action?.Invoke();
-            });
-            enumField.SetValueWithoutNotify(enumType.Value);
-            enumField.AddToClassList(USS01);
-            enumField.AddToClassList(USS02);
-            enumType.EnumField = enumField;
-            return enumField;
-        }
-
-        protected EnumField GetNewEnumFieldEventConditionType(ContainerEnumType<EventConditionType> enumType, System.Action action, string USS01 = "", string USS02 = "")
-        {
-            var enumField = new EnumField
-            {
-                value = enumType.Value
-            };
-            enumField.Init(enumType.Value);
-            enumField.RegisterValueChangedCallback(value =>
-            {
-                enumType.Value = (EventConditionType)value.newValue;
-                action?.Invoke();
-            });
-            enumField.SetValueWithoutNotify(enumType.Value);
-            enumField.AddToClassList(USS01);
-            enumField.AddToClassList(USS02);
-            enumType.EnumField = enumField;
-            return enumField;
-        }
-
-        protected TextField GenNewTextFieldTextsLanguage(List<LanguageGeneric<string>> texts, string placeHolderText = "", string USS01 = "", string USS02 = "")
+        protected TextField GetNewTextFieldTextsLanguage(List<LanguageGeneric<string>> texts, string placeHolderText = "", params string[] USSClasses)
         {
             foreach (var language in System.Enum.GetValues(typeof(LanguageType)) as LanguageType[])
             {
@@ -390,17 +109,16 @@ namespace Dialogue.Editor
                     LanguageGenericType = ""
                 });
             }
-            TextField textField = new TextField("");
-            this._languageGenericHolderTexts.Add(new LanguageGenericHolderText(texts, textField, placeHolderText));
-            textField.RegisterValueChangedCallback(value => texts.Find(text => text.LanguageType == this.EditorWindow.SelectedLanguage).LanguageGenericType = value.newValue);
-            textField.SetValueWithoutNotify(texts.Find(text => text.LanguageType == this.EditorWindow.SelectedLanguage).LanguageGenericType);
-            textField.multiline = true;
-            textField.AddToClassList(USS01);
-            textField.AddToClassList(USS02);
-            return textField;
+            var field = new TextField("");
+            this._languageGenericHolderTexts.Add(new LanguageGenericHolderText(texts, field, placeHolderText));
+            field.RegisterValueChangedCallback(value => texts.Find(text => text.LanguageType == this.EditorWindow.SelectedLanguage).LanguageGenericType = value.newValue);
+            field.SetValueWithoutNotify(texts.Find(text => text.LanguageType == this.EditorWindow.SelectedLanguage).LanguageGenericType);
+            field.multiline = true;
+            AddToClassLists(field, USSClasses);
+            return field;
         }
 
-        protected ObjectField GenNewTextFieldAudioClipsLanguage(List<LanguageGeneric<AudioClip>> audioClips, string USS01 = "", string USS02 = "")
+        protected ObjectField GetNewObjectFieldAudioClipsLanguage(List<LanguageGeneric<AudioClip>> audioClips, params string[] USSClasses)
         {
             foreach (var language in System.Enum.GetValues(typeof(LanguageType)) as LanguageType[])
             {
@@ -410,18 +128,81 @@ namespace Dialogue.Editor
                     LanguageGenericType = null
                 });
             }
-            var objectField = new ObjectField
+            var field = new ObjectField
             {
                 objectType = typeof(AudioClip),
                 allowSceneObjects = false,
                 value = audioClips.Find(audioClip => audioClip.LanguageType == this.EditorWindow.SelectedLanguage).LanguageGenericType,
             };
-            this._languageGenericHolderAudioClips.Add(new LanguageGenericHolderAudioClip(audioClips, objectField));
-            objectField.RegisterValueChangedCallback(value => audioClips.Find(text => text.LanguageType == this.EditorWindow.SelectedLanguage).LanguageGenericType = value.newValue as AudioClip);
-            objectField.SetValueWithoutNotify(audioClips.Find(text => text.LanguageType == this.EditorWindow.SelectedLanguage).LanguageGenericType);
-            objectField.AddToClassList(USS01);
-            objectField.AddToClassList(USS02);
-            return objectField;
+            this._languageGenericHolderAudioClips.Add(new LanguageGenericHolderAudioClip(audioClips, field));
+            field.RegisterValueChangedCallback(value => audioClips.Find(text => text.LanguageType == this.EditorWindow.SelectedLanguage).LanguageGenericType = value.newValue as AudioClip);
+            field.SetValueWithoutNotify(audioClips.Find(text => text.LanguageType == this.EditorWindow.SelectedLanguage).LanguageGenericType);
+            AddToClassLists(field, USSClasses);
+            return field;
+        }
+
+        protected ObjectField GetNewObjectFieldSprite(ContainerValue<Sprite> inputSprite, Image imagePreview, params string[] USSClasses)
+        {
+            ObjectField field = new ObjectField
+            {
+                objectType = typeof(Sprite),
+                allowSceneObjects = false,
+                value = inputSprite.Value
+            };
+            field.RegisterValueChangedCallback(value =>
+            {
+                inputSprite.Value = value.newValue as Sprite;
+                imagePreview.image = inputSprite.Value != null ? inputSprite.Value.texture : null;
+            });
+            imagePreview.image = inputSprite.Value != null ? inputSprite.Value.texture : null;
+            AddToClassLists(field, USSClasses);
+            return field;
+        }
+
+        protected ObjectField GetNewObjectField<T>(ContainerValue<T> containerValue, params string[] USSClasses) where T : Object
+        {
+            ObjectField field = new ObjectField
+            {
+                objectType = typeof(T),
+                allowSceneObjects = false,
+                value = containerValue.Value
+            };
+            field.RegisterValueChangedCallback(value => containerValue.Value = value.newValue as T);
+            field.SetValueWithoutNotify(containerValue.Value);
+            AddToClassLists(field, USSClasses);
+            return field;
+        }
+
+        protected EnumField GetNewEnumField<T>(ContainerEnumType<T> enumType, params string[] USSClasses) where T : System.Enum
+        {
+            var field = new EnumField
+            {
+                value = enumType.Value
+            };
+            field.Init(enumType.Value);
+            field.RegisterValueChangedCallback(value => enumType.Value = (T)value.newValue);
+            field.SetValueWithoutNotify(enumType.Value);
+            AddToClassLists(field, USSClasses);
+            enumType.EnumField = field;
+            return field;
+        }
+
+        protected EnumField GetNewEnumField<T>(ContainerEnumType<T> enumType, System.Action action, params string[] USSClasses) where T : System.Enum
+        {
+            var field = new EnumField
+            {
+                value = enumType.Value
+            };
+            field.Init(enumType.Value);
+            field.RegisterValueChangedCallback(value =>
+            {
+                enumType.Value = (T)value.newValue;
+                action?.Invoke();
+            });
+            field.SetValueWithoutNotify(enumType.Value);
+            AddToClassLists(field, USSClasses);
+            enumType.EnumField = field;
+            return field;
         }
 
         protected void AddModifierEventBuild(List<EventData<EventModifierType>> eventDatas, EventData<EventModifierType> eventData = null)

@@ -17,11 +17,29 @@ MonoBehaviour:
     BasePortName: Output
     TargetNodeGUID: 7f774b52-cd2e-49bd-b9f5-632aeb061c87
     TargetPortName: Input
-  EndDatas: []
+  - BaseNodeGUID: 7f774b52-cd2e-49bd-b9f5-632aeb061c87
+    BasePortName: 49acdea6-8fa5-4cdd-ad28-032825143210
+    TargetNodeGUID: eca356a2-0b91-47a3-83c2-27417da5bc8e
+    TargetPortName: Input
+  EndDatas:
+  - GUID: a401afc1-667f-4427-a67a-464a874c19b4
+    Position: {x: 615, y: 433}
+    EnumType:
+      Value: 1
   StartDatas:
   - GUID: f6f73eb0-9fde-45de-9893-76757e07af03
     Position: {x: 120, y: 140}
-  BranchDatas: []
+  EventDatas:
+  - GUID: 72131ae3-cb07-4555-bafc-c1ad2f4f5e20
+    Position: {x: 615, y: 332}
+    EventDataModifiers: []
+    DialogueEventSOs: []
+  BranchDatas:
+  - GUID: 6a80e7ef-d795-45f3-8f68-ad734889dfb1
+    Position: {x: 615, y: 211}
+    TrueGUIDNode: 
+    FalseGUIDNode: 
+    EventDataConditions: []
   DialogueDatas:
   - GUID: 7f774b52-cd2e-49bd-b9f5-632aeb061c87
     Position: {x: 264, y: 140}
@@ -49,7 +67,7 @@ MonoBehaviour:
       - LanguageType: 1
         LanguageGenericType: 
       - LanguageType: 2
-        LanguageGenericType: asdfasdf
+        LanguageGenericType: 
       AudioClips:
       - LanguageType: 1
         LanguageGenericType: {fileID: 0}
@@ -72,11 +90,11 @@ MonoBehaviour:
     DialogueDataImages: []
     DialogueDataPorts:
     - PortGUID: 49acdea6-8fa5-4cdd-ad28-032825143210
-      InputGUID: 
-      OutputGUID: 
+      InputGUID: eca356a2-0b91-47a3-83c2-27417da5bc8e
+      OutputGUID: 7f774b52-cd2e-49bd-b9f5-632aeb061c87
   ChoiceDatas:
   - GUID: eca356a2-0b91-47a3-83c2-27417da5bc8e
-    Position: {x: 609, y: 154}
+    Position: {x: 615, y: 65}
     ChoiceStateType:
       Value: 1
     Texts:

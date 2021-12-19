@@ -232,13 +232,14 @@ namespace Dialogue.Editor
 
         void AddTextFieldCharacterName(DialogueDataName container, Box boxContainer)
         {
-            var textField = GetNewTextField(container.CharacterName, "Name", "CharacterName");
+            var textField = GetNewField<TextField, string>(container.CharacterName, "CharacterName");
+            SetPlaceHolderText(textField, "Name");
             boxContainer.Add(textField);
         }
 
         void AddTextField(DialogueDataText container, Box boxContainer)
         {
-            var textField = GetNewTextFieldTextLanguage(container.Texts, "Text areans", "TextBox");
+            var textField = GetNewTextFieldTextsLanguage(container.Texts, "Text Area", "TextBox");
             container.TextField = textField;
             boxContainer.Add(textField);
         }
@@ -259,8 +260,8 @@ namespace Dialogue.Editor
             imagesBox.AddToClassList("BoxRow");
 
             // Set up Image Preview.
-            var leftImage = GetNewImage("ImagePreview", "ImagePreviewLeft");
-            var rightImage = GetNewImage("ImagePreview", "ImagePreviewRight");
+            var leftImage = GetNewField<Image>("ImagePreview", "ImagePreviewLeft");
+            var rightImage = GetNewField<Image>("ImagePreview", "ImagePreviewRight");
 
             imagePreviewBox.Add(leftImage);
             imagePreviewBox.Add(rightImage);

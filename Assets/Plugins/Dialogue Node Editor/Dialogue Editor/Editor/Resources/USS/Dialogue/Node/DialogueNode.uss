@@ -12,7 +12,8 @@
 
 .LabelText {
 	margin-right: auto;
-	font-size: 18px;
+	margin-top: 5px;
+	font-size: 14px;
 }
 
 .TextRemoveButton {
@@ -40,7 +41,7 @@
 
 /* ----------------- Name -----------------*/
 .NameColor {
-	color: green;
+	/* color: green; */
 }
 
 .CharacterName {
@@ -51,12 +52,12 @@
 /* ----------------- Text -----------------*/
 
 .TextColor {
-	color: red;
+	/* color: red; */
 }
 
 /* ----------------- Images -----------------*/
 .ImageColor {
-	color: blue;
+	/* color: blue; */
 }
 
 .ImagePreviewRight {

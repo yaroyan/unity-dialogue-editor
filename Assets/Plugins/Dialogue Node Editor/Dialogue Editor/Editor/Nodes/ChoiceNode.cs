@@ -59,7 +59,7 @@ namespace Dialogue.Editor
             var boxContainer = new Box();
             boxContainer.AddToClassList("TextLineBox");
 
-            var textField = GetNewTextFieldTextLanguage(ChoiceData.Texts, "Text", "TextBox");
+            var textField = GetNewTextFieldTextsLanguage(ChoiceData.Texts, "Text", "TextBox");
             ChoiceData.TextField = textField;
             boxContainer.Add(textField);
 

@@ -9,9 +9,9 @@
 }
 
 .node #title {
-	background-color: #FFFEB2;
+	background-color: #a58c00;
 }
 
 .node #title #title-label {
-	color: #000000;
+	color: white;
 }
