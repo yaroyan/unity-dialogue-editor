@@ -28,7 +28,7 @@ namespace Dialogue.Editor
         static readonly string s_graphViewStyleSheet = @"USS/Dialogue/EditorWindow/EditorWindow";
 
         /// <summary>
-        /// エディタのツールバーにメニューアイテムを追加します。
+        /// ツールバーのメニューアイテムにDialogueEditorを追加します。
         /// </summary>
         [MenuItem("Tools/DialogueWindow")]
         static DialogueEditorWindow ShowWindow()
@@ -38,6 +38,17 @@ namespace Dialogue.Editor
             window.minSize = new Vector2(500, 250);
             window.Show();
             return window;
+        }
+
+        /// <summary>
+        /// 複数のエディタを表示します。
+        /// </summary>
+        static DialogueEditorWindow ShowMultipleWindow()
+        {
+            var instance = CreateInstance<DialogueEditorWindow>();
+            instance.titleContent = new GUIContent("DialogueWindow");
+            instance.Show();
+            return instance;
         }
 
         /// <summary>
@@ -53,7 +64,7 @@ namespace Dialogue.Editor
 
             if (dialogueContainerSO is null) return false;
 
-            var window = ShowWindow();
+            var window = ShowMultipleWindow();
             window._currentDialogueContainer = dialogueContainerSO;
             window.Load();
             return true;
@@ -109,9 +120,8 @@ namespace Dialogue.Editor
             this._languageDropdownMenu = new ToolbarMenu();
             // ()によるキャストの例外処理に要するコストをカットするためasを用いる。
             foreach (var language in Enum.GetValues(typeof(LanguageType)) as LanguageType[])
-            {
                 this._languageDropdownMenu.menu.AppendAction(language.ToString(), new Action<DropdownMenuAction>(x => Language(language)));
-            }
+
             toolbar.Add(this._languageDropdownMenu);
 
             // ラベルの追加

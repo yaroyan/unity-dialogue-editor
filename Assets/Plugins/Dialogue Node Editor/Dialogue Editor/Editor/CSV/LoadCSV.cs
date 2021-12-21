@@ -12,7 +12,7 @@ namespace Dialogue.Editor
 {
     public class LoadCSV
     {
-        string _fileName = "DialogueCSV_Load.csv";
+        string _fileName = "DialogueCSV_Save.csv";
         CsvConfiguration _config = new CsvConfiguration(System.Globalization.CultureInfo.InvariantCulture)
         {
             // ヘッダーの有無の指定
@@ -28,8 +28,12 @@ namespace Dialogue.Editor
         };
 
         /// <summary>
-        /// CSVからデータをロードします。
+        /// Load data from CSV
         /// </summary>
+        /// <remarks>
+        /// Structure of Header of CSV <br/>
+        /// | Dialogue Name | Node GUID | Text GUID | Languages... |
+        /// </remarks>
         public void Load()
         {
             var path = $"{Helper.GetResourcesPath()}/{_fileName}";
@@ -51,10 +55,20 @@ namespace Dialogue.Editor
                     {
                         foreach (var nodeData in dialogueContainer.DialogueDatas)
                             foreach (var text in nodeData.DialogueDataTexts)
-                                LoadIntoDialogueNodeText(record, header, text);
+                            {
+                                if (record[2] != text.GUID.Value) continue;
+                                for (var i = 0; i < record.Length; i++)
+                                    foreach (LanguageType languageType in (Enum.GetValues(typeof(LanguageType)) as LanguageType[]).Where(e => e.ToString() == header[i]))
+                                        text.Texts.Find(x => x.LanguageType == languageType).LanguageGenericType = record[i];
+                            }
 
                         foreach (var nodeData in dialogueContainer.ChoiceDatas)
-                            LoadIntoChoiceNode(record, header, nodeData);
+                        {
+                            if (record[1] != nodeData.GUID) continue;
+                            for (var i = 0; i < record.Length; i++)
+                                foreach (LanguageType languageType in (Enum.GetValues(typeof(LanguageType)) as LanguageType[]).Where(e => e.ToString() == header[i]))
+                                    nodeData.Texts.Find(x => x.LanguageType == languageType).LanguageGenericType = record[i];
+                        }
 
                         EditorUtility.SetDirty(dialogueContainer);
                         AssetDatabase.SaveAssets();
@@ -63,25 +77,51 @@ namespace Dialogue.Editor
             }
         }
 
-        void LoadIntoDialogueNodeText(IReadOnlyList<string> record, IReadOnlyList<string> header, DialogueDataText text)
+        /// <summary>
+        /// Load data from CSV
+        /// </summary>
+        /// <remarks>
+        /// Structure of Header of CSV <br/>
+        /// | Node GUID | Text GUID | Languages... |
+        /// </remarks>
+        public void LoadByFile()
         {
-            if (record[2] != text.GUID.Value) return;
-            for (var i = 0; i < record.Count; i++)
-                foreach (LanguageType languageType in (LanguageType[])Enum.GetValues(typeof(LanguageType)))
+            var languageTypes = Enum.GetValues(typeof(LanguageType)) as LanguageType[];
+            foreach (var dialogueContainer in Helper.FindAllSOResources<DialogueContainerSO>())
+                using (var cr = new CsvReader(new StreamReader($"{Helper.GetResourcesPath()}/{dialogueContainer.name}"), this._config))
                 {
-                    if (header[i] != languageType.ToString()) continue;
-                    text.Texts.Find(x => x.LanguageType == languageType).LanguageGenericType = record[i];
-                }
-        }
+                    // ヘッダーの読み込み
+                    cr.Read();
+                    cr.ReadHeader();
+                    var header = cr.HeaderRecord;
 
-        void LoadIntoChoiceNode(IReadOnlyList<string> record, IReadOnlyList<string> header, ChoiceData nodeData)
-        {
-            if (record[1] != nodeData.GUID) return;
-            for (var i = 0; i < record.Count; i++)
-                foreach (LanguageType languageType in (LanguageType[])Enum.GetValues(typeof(LanguageType)))
-                {
-                    if (header[i] != languageType.ToString()) continue;
-                    nodeData.Texts.Find(x => x.LanguageType == languageType).LanguageGenericType = record[i];
+                    // レコードの読み込み
+                    while (cr.Read())
+                    {
+                        var record = cr.Parser.Record;
+
+                        foreach (var nodeData in dialogueContainer.DialogueDatas)
+                            foreach (var text in nodeData.DialogueDataTexts)
+                            {
+                                if (record[1] != text.GUID.Value) continue;
+                                for (var i = 0; i < record.Length; i++)
+                                {
+                                    foreach (LanguageType languageType in (Enum.GetValues(typeof(LanguageType)) as LanguageType[]).Where(e => e.ToString() == header[i]))
+                                        text.Texts.Find(x => x.LanguageType == languageType).LanguageGenericType = record[i];
+                                }
+                            }
+
+                        foreach (var nodeData in dialogueContainer.ChoiceDatas)
+                        {
+                            if (record[0] != nodeData.GUID) return;
+                            for (var i = 0; i < record.Length; i++)
+                                foreach (LanguageType languageType in (Enum.GetValues(typeof(LanguageType)) as LanguageType[]).Where(e => e.ToString() == header[i]))
+                                    nodeData.Texts.Find(x => x.LanguageType == languageType).LanguageGenericType = record[i];
+                        }
+
+                        EditorUtility.SetDirty(dialogueContainer);
+                        AssetDatabase.SaveAssets();
+                    }
                 }
         }
     }
